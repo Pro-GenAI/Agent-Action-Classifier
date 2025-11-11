@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from train_nn import flatten_action_to_text, is_harmful, make_embeddings
+from action_classifier.train_nn import flatten_action_to_text, get_label, make_embeddings
 
 
 def test_flatten_and_label():
@@ -18,8 +18,9 @@ def test_flatten_and_label():
     txt = flatten_action_to_text(sample)
     assert "Harassment" in txt
     assert "a.b" in txt
-    lbl = is_harmful(sample)
-    assert lbl in (0, 1)
+    lbl = get_label(sample)
+    assert isinstance(lbl, list) and len(lbl) == 2
+    assert all(0 <= x <= 3 for x in lbl)
 
 
 @pytest.mark.skipif(not hasattr(np, "zeros"), reason="numpy missing")

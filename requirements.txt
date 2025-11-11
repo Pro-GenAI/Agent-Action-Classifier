@@ -14,3 +14,8 @@ joblib
 # Integrations with LLMs
 openai
 python-dotenv
+
+# Web framework
+fastapi
+uvicorn[standard]
+pydantic

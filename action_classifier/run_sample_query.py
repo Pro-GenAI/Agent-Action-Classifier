@@ -79,7 +79,7 @@ def get_response(text):
     # Check for tool calls and classify them without calling them
     if message.tool_calls:
         for tool_call in message.tool_calls:
-            tool_name = tool_call.function.name
+            tool_name = tool_call.function.name  # type: ignore
             metadata = TOOL_METADATA.get(tool_name)
             if metadata:
                 is_harmful, confidence = is_action_harmful(metadata)

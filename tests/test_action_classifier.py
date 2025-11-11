@@ -3,7 +3,7 @@ from pathlib import Path
 # Create a lightweight test for action_classifier.py by mocking heavy dependencies
 
 ROOT = Path(__file__).parent.parent
-AC_PATH = ROOT / "action_classifier.py"
+AC_PATH = ROOT / "action_classifier" / "action_classifier.py"
 
 # We'll import the module as a module object after temporarily replacing
 # SentenceTransformer and torch

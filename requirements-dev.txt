@@ -1,6 +1,9 @@
 # Development dependencies
 # Install with: pip install -r requirements-dev.txt
 
+# Model training
+pandas
+
 # Code formatting and linting
 black
 isort

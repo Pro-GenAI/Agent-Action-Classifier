@@ -1,9 +1,14 @@
-<img src="./assets/project_logo.jpg" alt="Project logo" width="270px" align="left"/>
+<center>
+<img src="./assets/project_banner.jpg" alt="Project banner" height="360px"/>
+<!-- $ convert project_banner.png project_banner.jpg -->
+<!-- <img src="./assets/project_logo.jpg" alt="Project logo" width="270px"/> -->
 <!-- $ convert logo_large.png -resize 270x270 project_logo.jpg -->
+<h1 align="center">Agent MCP Action Guard</h1>
+<hr/>
+<h4 align="center"><em>Classifying AI agent actions to ensure safety and reliability</em></h4>
+</center>
 
-# Agent Action Classifier: Classifying AI agent actions to ensure safety and reliability
-
-A neural network model to classify actions proposed by autonomous AI agents as harmful or safe. The model has been based on a small dataset of labeled examples.
+A neural network model to classify actions proposed by autonomous AI agents as harmful or safe. The model has been based on a small dataset of labeled examples. The work aims to enhance the safety and reliability of AI agents by preventing them from executing actions that are potentially harmful, unethical, or violate predefined guidelines.
 
 [![Preprint](https://img.shields.io/badge/Paper-PDF-FFF7CC?style=for-the-badge&logo=files)](./assets/paper-ActionClassifier.pdf)
 [![AI](https://img.shields.io/badge/AI-C21B00?style=for-the-badge&logo=openaigym&logoColor=white)]()
@@ -38,20 +43,26 @@ pip install -r requirements-dev.txt
 2. Train the model (Optional):
 
 ```bash
-python3 train_nn.py
+python3 action_classifier/train_nn.py
 ```
 
 3. Implement the trained model in LLM calls - run the example:
 
 ```bash
-python3 run_sample_query.py
+python3 action_classifier/run_sample_query.py
 ```
 
+## Docs and examples
+
+- Detailed usage and API examples: `docs/USAGE.md`
+- Runnable example scripts: `examples/example_query.py` (see `examples/README.md`)
+
+
 ### Files:
-- `sample_actions.json` — dataset of action prompts and labels/resources in MCP-like format.
-- `train_nn.py` — small script that trains a neural network model and saves the trained model.
-- `action_classifier.py` — module that loads the trained model and provides a function to classify actions.
-- `run_sample_query.py` — script to classify new actions using the trained model (example wrapper).
+- `action_classifier/sample_actions.json` — dataset of action prompts and labels/resources in MCP-like format.
+- `action_classifier/train_nn.py` — small script that trains a neural network model and saves the trained model.
+- `action_classifier/action_classifier.py` — module that loads the trained model and provides a function to classify actions.
+- `action_classifier/run_sample_query.py` — script to classify new actions using the trained model (example wrapper).
 - `requirements.txt` — minimal dependencies.
 - `requirements-dev.txt` — development dependencies (linting, formatting, testing tools).
 
@@ -70,17 +81,3 @@ If you find this repository useful in your research, please consider citing:
 ### Created based on my past work
 
 Agent-Supervisor: Supervising Actions of Autonomous AI Agents for Ethical Compliance: [GitHub](https://github.com/Pro-GenAI/Agent-Supervisor)
-
-
-**Image credits**:
-- User icon: https://www.flaticon.com/free-icon/user_9131478
-- Robot icon: https://www.flaticon.com/free-icon/robot_18355220
-- Action: https://www.flaticon.com/free-icon/automation_2103800
-- Action classifier: https://www.flaticon.com/free-icon/data-processing_7017511
-- Executing/blocking actions: https://www.flaticon.com/free-icon/control-system_12539814
-- Response: https://www.flaticon.com/free-icon/fast-response_10748876
-
-- Data Processing: https://www.flaticon.com/free-icon/data-processing_8438966
-- AI training: https://www.flaticon.com/free-icon/data-ai_18263195
-- Evaluation: https://www.flaticon.com/free-icon/benchmarking_10789334
-- Saving the model: https://www.flaticon.com/free-icon/save_4371273
