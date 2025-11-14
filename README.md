@@ -23,12 +23,34 @@ A neural network model to classify actions proposed by autonomous AI agents as h
 [![Medium](https://img.shields.io/badge/Medium-12100E?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@praneeth.v/the-agent-action-classifier-a-step-toward-safer-autonomous-ai-agents-1ec57a601449)
 <!-- [![DOI](https://img.shields.io/badge/DOI-10.XXXXX/XXXXX-darkgreen?style=for-the-badge)](https://doi.org/10.XXXXX/XXXXX) -->
 
+## Common causes of harmful actions by AI agents:
+- User trying to jailbreak the model.
+- Model hallucinating or misunderstanding the context.
+- Model being overconfident in its incorrect knowledge.
+- Lack of proper constraints or guidelines for the agent.
+- Inadequate training data for specific scenarios.
+- MCP server providing incorrect tool descriptions that mislead the agent.
+
+## Special features:
+- This project introduces "HarmActEval" dataset and benchmark to evaluate an AI agent's probability of generating harmful actions.
+- The dataset has been used to train a lightweight neural network model that classifies actions as safe, harmful, or unethical.
+- The model is lightweight and can be easily integrated into existing AI agent frameworks like MCP.
+- This project is about classifying actions and not related to Guardrails.
+<!-- - Integration to MCP (Model Context Protocol) to allow real-time action classification.
+  - Integration to MCP server - fixes if client sends a bad action irrespective of server's tool descriptions.
+  - Integration to MCP client - fixes if the server made the model take bad actions. -->
+
+**Safety Features:**
+- Automatically classifies tool calls before execution
+- Blocks harmful actions based on the trained model
+- Provides detailed classification results
+- Allows safe actions to proceed normally
+
 ### Implementation
 ![Implementation Diagram](./assets/Implementation.jpg)
 
 #### Training
 ![Training Diagram](./assets/Training.jpg)
-
 
 ### Usage:
 1. Create a virtual environment and install dependencies:
@@ -39,27 +61,21 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-For development (optional, includes linting, formatting, and testing tools):
-
-```bash
-pip install -r requirements-dev.txt
-```
-
-2. Train the model (Optional):
-
-```bash
-python3 action_classifier/train_nn.py
-```
-
-3. Implement the trained model in LLM calls - run the example:
+2. Implement the trained model in LLM calls - run the example:
 
 ```bash
 python3 action_classifier/run_sample_query.py
 ```
 
-## Docs and examples
+3. Train the model (Optional):
 
-- Detailed usage and API examples: `docs/USAGE.md`
+```bash
+python3 action_classifier/train_nn.py
+```
+
+
+## Docs and examples
+- Detailed usage, including API examples: `docs/USAGE.md`
 - Runnable example scripts: `examples/example_query.py` (see `examples/README.md`)
 
 
