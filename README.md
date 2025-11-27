@@ -14,7 +14,7 @@ $ ffmpeg -i unused/banner_video.mp4 -vframes 1 project_banner.jpg
 <h4 align="center"><em>Safe actions for safe AI</em></h4>
 </p>
 
-A neural network model to classify actions proposed by autonomous AI agents as harmful or safe. The model has been based on a small dataset of labeled examples. The work aims to enhance the safety and reliability of AI agents by preventing them from executing actions that are potentially harmful, unethical, or violate predefined guidelines.
+Increasing usage of LLM Agents and MCP leads to the usage of harmful tools and harmful usage of tools. Action Guard uses a neural network model to classify actions proposed by autonomous AI agents as harmful or safe. The model has been based on a small dataset of labeled examples. The work aims to enhance the safety and reliability of AI agents by preventing them from executing actions that are potentially harmful, unethical, or violate predefined guidelines.
 
 [![Preprint](https://img.shields.io/badge/Paper-PDF-FFF7CC?style=for-the-badge&logo=files)](./assets/paper-ActionClassifier.pdf)
 [![AI](https://img.shields.io/badge/AI-C21B00?style=for-the-badge&logo=openaigym&logoColor=white)]()
@@ -24,7 +24,7 @@ A neural network model to classify actions proposed by autonomous AI agents as h
 [![Medium](https://img.shields.io/badge/Medium-12100E?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@praneeth.v/the-agent-action-classifier-a-step-toward-safer-autonomous-ai-agents-1ec57a601449)
 [![HuggingFace Dataset](https://img.shields.io/badge/HuggingFace_Dataset-FF6F00?style=for-the-badge&logo=huggingface&logoColor=white)](https://huggingface.co/datasets/prane-eth/HarmActEval)
 [![HuggingFace Model](https://img.shields.io/badge/HuggingFace_Model-FF6F00?style=for-the-badge&logo=huggingface&logoColor=white)](https://huggingface.co/prane-eth/Agent-Action-Classifier)
-<!-- [![DOI](https://img.shields.io/badge/DOI-10.XXXXX/XXXXX-darkgreen?style=for-the-badge)](https://doi.org/10.XXXXX/XXXXX) -->
+[![DOI](https://img.shields.io/badge/DOI-10.20944/preprints202510.1415.v1-yellow?style=for-the-badge)](https://www.preprints.org/manuscript/202510.1415)
 
 
 ### Demo
@@ -91,6 +91,44 @@ mcp-proxy-guarded --proxy-to http://localhost:8080/mcp --port 8081
 1. Start the chat server that uses the guarded proxy:
 ```bash
 python agent_action_guard/scripts/chat_server.py
+```
+
+### Docker Compose
+
+Run the whole demo with Docker Compose. Steps:
+
+- Copy the example env file and edit values as needed:
+
+```bash
+cp .env.example .env
+# Edit .env to set BACKEND_API_KEY, OPENAI_MODEL*, and NGROK_AUTHTOKEN if you want a public tunnel
+```
+
+- Build and start the services:
+
+```bash
+docker-compose up --build
+```
+
+- Services exposed locally:
+	- MCP server: `http://localhost:8080`
+	- Guarded proxy: `http://localhost:8081`
+	- API server: `http://localhost:8000`
+	- Chat (Gradio): `http://localhost:7860`
+	- Ngrok web UI: `http://localhost:4040` (optional)
+
+Notes:
+- The `ngrok` service is optional; set `NGROK_AUTHTOKEN` in `.env` if you want a public tunnel. Some ngrok images require an auth token or additional configuration; you can also run `ngrok` locally and point it at `http://localhost:8081`.
+- If you run into permission or package build issues in the image, try building locally or adjusting the base image in `Dockerfile`.
+
+To setup manually without Docker:
+```bash
+python agent_action_guard/scripts/sample_mcp_server.py  # Starts a sample MCP server
+export $(grep -v '^#' ./.env | xargs)  # Load env variables from .env
+mcp-proxy-guarded --proxy-to http://localhost:8080/mcp --port 8081  # Start guarded MCP proxy
+ngrok http --url=troll-prime-ultimately.ngrok-free.app 8081  # Start ngrok for guarded MCP server
+python agent_action_guard/scripts/api_server.py  # Start backend
+python agent_action_guard/scripts/chat_server.py  # Start Gradio app
 ```
 
 <!-- #### Training

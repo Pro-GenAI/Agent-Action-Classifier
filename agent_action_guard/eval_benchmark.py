@@ -12,12 +12,12 @@ from dotenv import load_dotenv
 import openai
 
 from agent_action_guard import is_action_harmful
+from agent_action_guard.train_nn import dataset
 
 load_dotenv()
 client = openai.OpenAI()
 
 ROOT = Path(__file__).parent
-DATASET_PATH = ROOT / "HarmActEval_dataset.json"
 CACHE_PATH = ROOT.parent / "api_responses_cache.json"
 
 model = os.getenv("OPENAI_MODEL", "")
@@ -42,29 +42,40 @@ def save_cache():
         json.dump(cache, f, indent=None)
 
 
-def load_dataset() -> List[Dict]:
-    """Load sample actions."""
-    with open(DATASET_PATH, encoding="utf-8") as f:
-        data = json.load(f)
-    return data["actions"]
+def load_dataset(only_harmful_unethical: bool = True) -> List[Dict]:
+    """Load sample actions.
+
+    By default, filter the dataset to include only items classified as
+    'harmful' or 'unethical'. This ensures the benchmark tests only
+    prompts that are potentially harmful for the purposes of evaluation.
+    """
+    # Dataset may be a dict containing an "actions" key, or a list directly
+    actions = list(dataset["actions"]) if isinstance(dataset, dict) and "actions" in dataset else list(dataset)
+
+    if not only_harmful_unethical:
+        return actions
+
+    filtered = [a for a in actions if a.get("classification") != "safe"]
+    print(f"Filtered dataset to {len(filtered)} harmful/unethical actions out of {len(actions)} total.")
+    return filtered
 
 
 def create_tools_from_actions(actions: List[Dict]) -> List[Dict]:
     """Create OpenAI tools from unique server labels in actions."""
     server_labels = set()
     for action in actions:
-        sl = action["action"].get("server_label", "")
+        sl = action.get("action", {}).get("server_label", "")
         if sl:
             server_labels.add(sl)
 
     tools = []
     for sl in sorted(server_labels):
         # Find an example action for this server_label
-        example_action = next((a for a in actions if a["action"].get("server_label") == sl), None)
+        example_action = next((a for a in actions if a.get("action", {}).get("server_label") == sl), None)
         if not example_action:
             continue
 
-        params = example_action["action"].get("parameters", {})
+        params = example_action.get("action", {}).get("parameters", {})
         properties = {}
         required = []
 
@@ -99,6 +110,9 @@ def create_tools_from_actions(actions: List[Dict]) -> List[Dict]:
 def get_api_response(prompt: str, tools: List[Dict]) -> Dict:
     """Get API response, using cache if available."""
     cache_key = prompt.strip()
+    # ensure our cache structure has the model key
+    if model_name_short not in cache:
+        cache[model_name_short] = {}
     if cache[model_name_short].get(cache_key):
         return cache[model_name_short][cache_key]
 
@@ -152,8 +166,9 @@ def construct_action_dict(server_label: str, args: Dict, actions: List[Dict]) ->
 
 def evaluate():
     """Main evaluation function."""
-    actions = load_dataset()
-    print(f"Loaded {len(actions)} sample actions.")
+    # Load only harmful/unethical actions for the benchmark
+    actions = load_dataset(only_harmful_unethical=True)
+    print(f"Loaded {len(actions)} sample actions (filtered to only harmful/unethical).")
 
     tools = create_tools_from_actions(actions)
     print(f"Created {len(tools)} tools.")
@@ -164,7 +179,9 @@ def evaluate():
     correctly_detected = 0
 
     for i, action in enumerate(actions):
-        prompt = action["prompt"]
+        # Prefer using the manipulated prompt when available (the obfuscated/altered prompt)
+        # and fall back to the original prompt if not present.
+        prompt = action.get("manipulated_prompt") or action.get("prompt") or ""
         ground_truth_harmful = action.get("classification") == "harmful"
 
         print(f"Processing {i+1}/{len(actions)}: {prompt[:50]}...")
@@ -188,7 +205,8 @@ def evaluate():
                     correctly_detected += 1
 
             results.append({
-                "prompt": prompt,
+                "original_prompt": action.get("prompt"),
+                "used_prompt": prompt,
                 "ground_truth_harmful": ground_truth_harmful,
                 "tool_called": tool_name,
                 "predicted_harmful": is_harmful,

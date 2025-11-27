@@ -1,23 +1,20 @@
-# Use an official Python runtime as a parent image
 FROM python:3.13-slim
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy the requirements file into the container
-COPY requirements.txt .
+# Install minimal build tools for some packages
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends build-essential gcc git \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy project
+COPY . /app
 
-# Copy the current directory contents into the container at /app
-COPY . .
+# Install project and runtime dependencies
+RUN python -m pip install --upgrade pip setuptools wheel \
+    && pip install -e . \
+    && pip install --no-cache-dir git+https://github.com/Pro-GenAI/mcp-proxy-guarded
 
-# Environment variables are loaded from .env file by the application's code.
-# .env file is loaded using the COPY command above.
+EXPOSE 8080 8081 8000 7860
 
-# Make port 8001 available to the world outside this container
-EXPOSE 8001
-
-# Run server.py when the container launches
-CMD ["python", "server.py"]
+CMD ["/bin/bash"]

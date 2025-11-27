@@ -13,6 +13,6 @@ pylint
 # Type checking
 mypy
 
-# Testing
-pytest
-pytest-cov
+# # Testing
+# pytest
+# pytest-cov

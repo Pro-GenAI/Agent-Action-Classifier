@@ -76,7 +76,7 @@ def set_seed():
 set_seed()
 
 
-DEVICE = torch.device("cpu") #torch.device("cuda" if torch.cuda.is_available() else "cpu")
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 8
 
 # Best hyperparameters found via tuning
@@ -161,10 +161,11 @@ class SimpleMLP(nn.Module):
         return self.net(x)
 
 
+with open(DATA_PATH, encoding="utf-8") as f:
+    dataset = json.load(f)
+
 def load_texts_and_labels():
     """Load texts and labels from dataset."""
-    with open(DATA_PATH, encoding="utf-8") as f:
-        dataset = json.load(f)
     texts = []
     labels = []
     classes = []

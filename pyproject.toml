@@ -25,7 +25,7 @@ dependencies = [
     "fastapi",
     "uvicorn[standard]",
     "pydantic",
-    "gradio>=6.0.0.dev5",
+    "gradio>=6.0.0",
 ]
 requires-python = ">=3.8"
 
