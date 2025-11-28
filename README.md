@@ -8,7 +8,7 @@ $ ffmpeg -i unused/banner_video.mp4 -vframes 1 project_banner.jpg
 <!-- $ convert project_banner.png -resize 600x319 project_banner.jpg -->
 <!-- <img src="./assets/project_logo.jpg" alt="Project logo" width="270px"/> -->
 <!-- $ convert logo_large.png -resize 270x270 project_logo.jpg -->
-<h2 align="center">Agent MCP Action Guard</h2>
+<h2 align="center">Safe Agent using Action Guard</h2>
 <!-- <hr/> -->
 <h4 align="center"><em>Classifying AI agent actions to ensure safety and reliability</em></h4>
 <h4 align="center"><em>Safe actions for safe AI</em></h4>

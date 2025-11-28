@@ -26,6 +26,8 @@ dependencies = [
     "uvicorn[standard]",
     "pydantic",
     "gradio>=6.0.0",
+    # Custom MCP proxy
+    "mcp-proxy-guarded @ git+https://github.com/Pro-GenAI/mcp-proxy-guarded.git",
 ]
 requires-python = ">=3.8"
 
