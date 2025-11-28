@@ -8,3 +8,7 @@ unused/
 api_responses_cache.json
 *.egg-info
 *.drawio.bkp
+llamacpp_files/
+build/
+dist/
+*.log

@@ -63,8 +63,8 @@ Increasing usage of LLM Agents and MCP leads to the usage of harmful tools and h
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Pro-GenAI/AgentActionGuard
-cd AgentActionGuard
+git clone https://github.com/Pro-GenAI/Agent-Action-Guard
+cd Agent-Action-Guard
 ```
 
 2. Create a virtual environment and install dependencies:
@@ -73,7 +73,7 @@ cd AgentActionGuard
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
-# pip install git+https://github.com/Pro-GenAI/AgentActionGuard
+# pip install git+https://github.com/Pro-GenAI/Agent-Action-Guard
 ```
 
 3. Start an MCP server (if not already running):
